@@ -3,7 +3,7 @@
 # How does the application works?
 1. User uploads a photo of the receipt.
 2. Application analyzes it.
-3. User gets a text version of all the important information from the receipt.
+3. Application automatically extracts the Vendor, Date, Line Items, Tax, and Total into a downloadable file (CSV format).
 
 # How to install application?
 ## Requirements
@@ -13,8 +13,8 @@
 - MySQL/Postgres
 
 ## Quick start (dev)
-1. Clone repo
-2. Backend:
+### 1. Clone repo
+### 2. Backend:
    ```bash
    composer install
    cp .env.example .env
@@ -23,9 +23,11 @@
    php artisan migrate --seed
    php artisan storage:link
    php artisan serve
-3. Frontend:
+   ```
+### 3. Frontend:
     ```bash
     cd client
     npm install
     // set NUXT_PUBLIC_API_BASE_URL in client/.env
     npm run dev
+    ```
