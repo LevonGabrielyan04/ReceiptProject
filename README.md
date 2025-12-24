@@ -25,9 +25,7 @@
    php artisan serve
    ```
 ### 3. Frontend:
-    ```bash
     cd client
     npm install
     // set NUXT_PUBLIC_API_BASE_URL in client/.env
     npm run dev
-    ```
