@@ -25,11 +25,11 @@ class GeminiService implements PhotoAnalyzerInterface
     /**
      * Analyze the receipt with Gemini API
      *
-     * @param UploadedFile|string $photo - Either an UploadedFile or path to image file
-     * @return stdClass - The json decoded response from Gemini
+     * @param UploadedFile $photo - an UploadedFile file
+     * @return array - The json decoded response from Gemini
      * @throws Exception
      */
-    public function analyze($photo): stdClass
+    public function analyze($photo): array
     {
         try {
             $response = $this->sendRequest($photo);
@@ -55,7 +55,7 @@ class GeminiService implements PhotoAnalyzerInterface
             throw new Exception('No text response received from Gemini');
         }
 
-        return json_decode($textResponse);
+        return json_decode($textResponse, true);
     }
     private function sendRequest($photo)
     {

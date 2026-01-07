@@ -37,9 +37,7 @@ const handleFileChange = async (event) => {
     const { data } = await useFetch('/api/convert', {
         method: 'POST',
         body: formData,
-        baseURL: "http://localhost:8000",
+        baseURL: config.public.apiBase,
     });
-
-    console.log(data)
 }
 </script>
