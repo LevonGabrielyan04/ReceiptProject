@@ -5,11 +5,13 @@ use App\Contracts\PhotoAnalyzerInterface;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\UploadedFile;
 use Exception;
+use stdClass;
 
 class GeminiService implements PhotoAnalyzerInterface
 {
     protected readonly string $apiUrl;
     protected readonly string $apiKey;
+    protected const ApiRequestPrompt = 'Extract the vendor, date, total amount, and tax from this image. Return ONLY a raw JSON object. Do not include markdown code blocks, backticks, or any introductory/concluding text. Use the following schema: { "vendor": "string", "date": "YYYY-MM-DD", "total_amount": float, "tax": float }';
     public function __construct()
     {
         $this->apiKey = config('services.gemini.key');
@@ -24,10 +26,10 @@ class GeminiService implements PhotoAnalyzerInterface
      * Analyze the receipt with Gemini API
      *
      * @param UploadedFile|string $photo - Either an UploadedFile or path to image file
-     * @return string - The text response from Gemini
+     * @return stdClass - The json decoded response from Gemini
      * @throws Exception
      */
-    public function analyze($photo): string
+    public function analyze($photo): stdClass
     {
         try {
             $response = $this->sendRequest($photo);
@@ -53,7 +55,7 @@ class GeminiService implements PhotoAnalyzerInterface
             throw new Exception('No text response received from Gemini');
         }
 
-        return $textResponse;
+        return json_decode($textResponse);
     }
     private function sendRequest($photo)
     {
@@ -69,7 +71,7 @@ class GeminiService implements PhotoAnalyzerInterface
                 [
                     'parts' => [
                         [
-                            'text' => "say hi!"
+                            'text' => self::ApiRequestPrompt
                         ],
                         [
                             'inline_data' => [

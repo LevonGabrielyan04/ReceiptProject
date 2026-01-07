@@ -16,6 +16,6 @@ class ReceiptController extends Controller
         ]);
 
         $text = $this->analyzer->analyze($request->file('photo'));
-        return response()->json([$text]);
+        return response()->json($text);
     }
 }

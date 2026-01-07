@@ -2,7 +2,9 @@
 
 namespace App\Contracts;
 
+use stdClass;
+
 interface PhotoAnalyzerInterface
 {
-    public function analyze($photo): string;
+    public function analyze($photo): stdClass;
 }
