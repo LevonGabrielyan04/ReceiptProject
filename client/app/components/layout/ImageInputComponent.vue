@@ -13,6 +13,17 @@
                         <span class="font-semibold">Selected file:</span> {{ selectedFile.name }}
                     </p>
                 </div>
+
+                <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center" v-show="showDownloadMessage">
+                    <p class="text-sm text-blue-700">
+                        Your download will start shortly
+                    </p>
+                </div>
+                <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg text-center" v-show="showErrorMessage">
+                    <p class="text-sm text-red-700">
+                        Please upload a file in a supported format: JPEG, PNG, or JPG.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -24,8 +35,12 @@ import FileInput from "../ui/FileInput.vue";
 
 const selectedFile = ref(null);
 const config = useRuntimeConfig()
+const showDownloadMessage = ref(false);
+const showErrorMessage = ref(false);
 
 const handleFileChange = async (event) => {
+    showDownloadMessage.value = true;
+    showErrorMessage.value = false;
     const file = event.target.files[0]
     if (!file) return
 
@@ -34,10 +49,30 @@ const handleFileChange = async (event) => {
     const formData = new FormData()
     formData.append('photo', file)
 
-    const { data } = await useFetch('/api/convert', {
+    const blob = await $fetch('/api/convert', {
         method: 'POST',
         body: formData,
         baseURL: config.public.apiBase,
+        responseType: 'blob',
+    }).then(() => {
+        downloadBlob(blob, 'export.csv');
+        showDownloadMessage.value = false;
+    })
+    .catch(() => {
+        showDownloadMessage.value = false;
+        showErrorMessage.value = true;
     });
 }
+
+
+const downloadBlob = (blob, filename) => {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+};
 </script>
