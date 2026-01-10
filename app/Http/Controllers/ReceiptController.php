@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contracts\FileConverterInterface;
 use App\Contracts\PhotoAnalyzerInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
 class ReceiptController extends Controller

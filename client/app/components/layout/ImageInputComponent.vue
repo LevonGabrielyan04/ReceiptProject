@@ -49,12 +49,13 @@ const handleFileChange = async (event) => {
     const formData = new FormData()
     formData.append('photo', file)
 
-    const blob = await $fetch('/api/convert', {
+    $fetch('/api/convert', {
         method: 'POST',
         body: formData,
         baseURL: config.public.apiBase,
         responseType: 'blob',
-    }).then(() => {
+    })
+    .then((blob) => {
         downloadBlob(blob, 'export.csv');
         showDownloadMessage.value = false;
     })
